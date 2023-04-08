@@ -16,7 +16,7 @@ El contenido del repositorio está organizado de la siguiente manera:
 
 - `Unidad 6`: diccionarios y conjuntos, definición y operaciones básicas, implementación; estructuras dinámicas, listas, definición y terminología, operaciones básicas como agregar, borrar e intercambiar elementos, etc; arboles, arboles binarios de búsqueda, definición y terminología, operaciones básicas como recorrer, agregar, borrar e intercambiar elementos, etc. Ejemplos prácticos y ejercicios en PC.
 
-Los ejercicios están organizados por unidad y cada unidad esta dentro de la carpeta correspondiente al parcial.
+Los ejercicios están organizados por trabajos práctidos y cada trabajo esta dentro de la carpeta correspondiente al parcial.
 
 ## Contribuciones
 
