@@ -20,4 +20,4 @@ Los ejercicios están organizados por unidad y cada unidad esta dentro de la car
 
 ## Contribuciones
 
-Las contribuciones a este repositorio son bienvenidas. Si encuentra algún error o tiene alguna sugerencia para mejorar los ejercicios, no dude en abrir un pull request o una issue.
+Las contribuciones a este repositorio son bienvenidas. Si encuentra algún error o tiene alguna sugerencia para mejorar los ejercicios, no dude en contactarme, estoy abierto a mejoras !
