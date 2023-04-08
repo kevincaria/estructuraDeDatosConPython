@@ -18,6 +18,6 @@ El contenido del repositorio está organizado de la siguiente manera:
 
 Los ejercicios están organizados por unidad y cada unidad esta dentro de la carpeta correspondiente al parcial.
 
-#Contribuciones
+## Contribuciones
 
 Las contribuciones a este repositorio son bienvenidas. Si encuentra algún error o tiene alguna sugerencia para mejorar los ejercicios, no dude en abrir un pull request o una issue.
