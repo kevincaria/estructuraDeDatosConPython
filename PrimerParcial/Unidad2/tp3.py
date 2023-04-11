@@ -21,6 +21,7 @@ y False en caso contrario.
 
 mayorNumeración: Operación que recibe dos propiedades y si están en la misma calle, 
 retorna la que posee mayor numeración. Si están calles diferentes debe lanzar una excepción.
+
 calculaImpuestoARBA: Operación que retorna el porcentaje de impuesto inmobiliario de una propiedad, 
 según la siguiente regla:
 
@@ -29,12 +30,89 @@ Propiedades entre 1870 y 1949:
 Entre 1 y 3 ambientes: 5% de impuesto
 Entre 4 y 6 ambientes: 10% de impuesto
 Más de 6 ambientes: 25 % de impuesto
+
 Propiedades desde 1950 hasta la actualidad:
 Entre 1 y 5 ambientes: 5% de impuesto
 Más de 5 ambientes: 35 % de impuesto
 '''
+class Propiedad:
+    def __init__(self, calle = '', numero = 0, localidad = '', año = 1871, ambientes = 0):
 
+        if type(calle) == str:
+            self.calle = calle.title()
+        else:
+            raise Exception('La calle ingresada tiene un formato inválido')
+        
+        if type(numero) == int and numero > 0:
+            self.numero = numero
+        else:
+            raise Exception('La calle ingresada tiene un formato inválido o es menor a 0')
+        
+        if type(localidad) == str:
+            self.localidad = localidad.title()
+        else:
+            raise Exception('La localidad ingresada tiene un formato inválido')
+        
+        if type(año) == int and año>= 1871:
+            self.año = año
+        else:
+            raise Exception('El año ingresado tiene un formato inválido o es menor a 1870')
+        
+        if type(ambientes) == int and ambientes > 0:
+            self.ambientes = ambientes
+        else:
+            raise Exception('La calle ingresada tiene un formato inválido o es menor a 0')
+    
+    def __repr__(self):
+        return (f'{self.calle} {str(self.numero)} ({self.localidad})')
+    
+    def mismaLocalidad(self, propiedad):
+        return self.localidad == propiedad.localidad
+    
+    def mayorNumeracion(self, propiedad):
+        if self.calle == propiedad.calle:
+            if max(self.numero, propiedad.numero) == self.numero:
+                return self
+            else:
+                return propiedad
+        else:
+            raise Exception('Las propiedades no son de la misma calle')
 
+    def impuestoPropiedadAntigua(ambientes):
+        impuesto = 0
+
+        if ambientes >= 3:
+            impuesto = 5
+        elif ambientes >= 4 and ambientes <=6:
+            impuesto = 10
+        else:
+            impuesto = 25
+        
+        return impuesto
+
+    def impuestoPropiedadActual(ambientes):
+        impuesto = 0
+
+        if ambientes >= 5:
+            impuesto = 5
+        else:
+            impuesto = 35
+        
+        return impuesto
+    
+    def calculaImpuestoARBA(self):
+        impuesto = 0
+        if self.año <= 1949 :
+            impuesto = self.impuestoPropiedadAntigua(self.ambientes)
+        else:
+            impuesto = self.impuestoPropiedadActual(self.ambientes) 
+        
+        return(f'{str(impuesto)}% de impuesto')
+        
+propiedad1 = Propiedad('vergara', 10, 'moron', 1890, 3)
+propiedad2 = Propiedad ('vergara', 5, 'moron', 1990, 5)
+
+print(propiedad1.mayorNumeracion(propiedad2))
 
 '''
 Ejercicio 2
@@ -47,7 +125,7 @@ Multiplicador (cuánto se paga por cada peso apostado)
 Implementar las siguientes operaciones:
 
 Constructor: Debe incluir las validaciones necesarias, teniendo en cuenta que los números que 
-participan se encuentran entre 0 y 999.
+participan se encuentran entre 0 y 999.192.168.129.123:5672
 
 __repr__: Al usar la función print con una variable del tipo quiniela debe mostrar: 
 Primer número ganador: 'numero' - Segundo número ganador: 'numero' - Paga: 'multiplicador'X.
@@ -63,7 +141,36 @@ Solo se aceptan apuestas hasta $1000.
 premiadosCercanos: Operación que retorna True si los números premiados están a menos de 
 10 números de distancia y False en caso contrario.
 '''
+def validarTipo(tda, atributo, tipo, condicion = True):
+    if type(tda) == tipo and condicion:
+        return tda
+    else:
+        raise Exception(f'La variable {atributo} debe ser {str(tipo)}')
+class Quiniela:
+    def __init__(self, primerPremio, segundoPremio, multiplicador):
+        self.primerPremio = validarTipo(primerPremio,'El primer Premio', int, primerPremio > 0)
+        self.segundoPremio = validarTipo(segundoPremio,'El segundo Premio', int, segundoPremio > 0)
+        self.multiplicador = validarTipo(multiplicador,'El multiplicador', int, multiplicador > 0)
 
+# __repr__: Al usar la función print con una variable del tipo quiniela debe mostrar: 
+# Primer número ganador: 'numero' - Segundo número ganador: 'numero' - Paga: 'multiplicador'X.
+    def __repr__(self):
+        return (f'Primer número ganador: {str(self.primerPremio)} - Segundo número ganador: {str(self.segundoPremio)} - Paga: {str(self.multiplicador)}X.')
+
+# esNumeroGanador: Operación que recibe un número por parámetros y retorna True si el número 
+# resultó ganador o False en caso contrario.
+    def esNumeroGanador(self, numero):
+        return self.primerPremio == numero or self.segundoPremio == numero
+    
+# importeAPagar: Operación que recibe un número y el monto apostado por parámetros y retorna el 
+# importe a pagar si la apuesta es ganadora o 0 en caso contrario. Si el número es el primer premio, 
+# se paga 'mutiplicador' por cada peso apostado, si es el segundo premio se paga la mitad. 
+# Solo se aceptan apuestas hasta $1000.
+#     def importeAPagar(self, numero, monto):
+#         if self.esNumeroGanador(numero):
+            
+        
+# quiniela = Quiniela(-10,1,1)
 '''
 Ejercicio 3
 Implementar el TDA "Cuenta" que modela una cuenta bancaria, la estructura de datos esta 
