@@ -211,7 +211,7 @@ class Cuenta:
     def __init__(self, nroCuenta, dni, saldoInicial, interesAnual):
         self.nroCuenta = validarTipo(nroCuenta, 'nroCuenta', int, nroCuenta > 0, 'o el nro de cuenta ingresado fue negativo')
         self.dni = validarTipo(dni, 'dni', int, dni > 0, 'o el numero de dni ingresado fue menor a 0')
-        self.saldo = validarTipo(saldoInicial, 'saldoInicial', float, saldo > 0, ' o el saldo ingresado fue negativo') 
+        self.saldo = validarTipo(saldoInicial, 'saldoInicial', float, saldoInicial > 0, ' o el saldo ingresado fue negativo') 
         self.interesAnual = validarTipo(interesAnual, 'interesAnual', float, interesAnual > 0, 'o el interes anual ingresado fue negativo')
 
     def __repr__(self):
