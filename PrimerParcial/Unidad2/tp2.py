@@ -141,16 +141,16 @@ Solo se aceptan apuestas hasta $1000.
 premiadosCercanos: Operación que retorna True si los números premiados están a menos de 
 10 números de distancia y False en caso contrario.
 '''
-def validarTipo(tda, atributo, tipo, condicion = True):
+def validarTipo(tda, atributo, tipo, condicion = True, explicacion = ''):
     if type(tda) == tipo and condicion:
         return tda
     else:
-        raise Exception(f'La variable {atributo} debe ser {str(tipo)}')
+        raise Exception(f'La variable {atributo} debe ser {str(tipo)} {explicacion}')
 class Quiniela:
     def __init__(self, primerPremio, segundoPremio, multiplicador):
-        self.primerPremio = validarTipo(primerPremio,'El primer Premio', int, primerPremio > 0)
-        self.segundoPremio = validarTipo(segundoPremio,'El segundo Premio', int, segundoPremio > 0)
-        self.multiplicador = validarTipo(multiplicador,'El multiplicador', int, multiplicador > 0)
+        self.primerPremio = validarTipo(primerPremio,'El primer Premio', int, primerPremio > 0, 'o se ingreso un numero negativo')
+        self.segundoPremio = validarTipo(segundoPremio,'El segundo Premio', int, segundoPremio > 0, 'o se ingreso un numero negativo')
+        self.multiplicador = validarTipo(multiplicador,'El multiplicador', int, multiplicador > 0, 'o se ingreso un numero negativo')
 
 # __repr__: Al usar la función print con una variable del tipo quiniela debe mostrar: 
 # Primer número ganador: 'numero' - Segundo número ganador: 'numero' - Paga: 'multiplicador'X.
@@ -166,11 +166,24 @@ class Quiniela:
 # importe a pagar si la apuesta es ganadora o 0 en caso contrario. Si el número es el primer premio, 
 # se paga 'mutiplicador' por cada peso apostado, si es el segundo premio se paga la mitad. 
 # Solo se aceptan apuestas hasta $1000.
-#     def importeAPagar(self, numero, monto):
-#         if self.esNumeroGanador(numero):
-            
+    def importeAPagar(self, numero, monto):
         
-# quiniela = Quiniela(-10,1,1)
+        premio = 0
+
+        if self.esNumeroGanador(numero):
+            if(self.primerPremio == numero):
+                premio = monto*self.multiplicador
+            else:
+                premio = (monto*self.multiplicador)/2
+        else:
+            premio = 0
+
+        return premio
+            
+# premiadosCercanos: Operación que retorna True si los números premiados están a menos de 
+# 10 números de distancia y False en caso contrario.
+    def premiadosCercanos(self):
+        return abs(self.primerPremio - self.segundoPremio) < 10
 '''
 Ejercicio 3
 Implementar el TDA "Cuenta" que modela una cuenta bancaria, la estructura de datos esta 
@@ -180,22 +193,44 @@ Número de cuenta
 DNI del titular
 Saldo de cuenta actual
 Interés anual
-
 Implementar las siguientes operaciones:
 
 Constructor: Debe incluir las validaciones necesarias.
-
 __repr__: Al usar la función print con una variable del tipo cuenta debe mostrar: 
 Cuenta Nro: 'numero' - Titular: 'dni' ($'saldo').
+
+ingresarDinero: Operación que recibe un número e ingresa esa cantidad en la cuenta.
 
 actualizarSaldo: Operación que actualiza el saldo de la cuenta aplicándole el interés diario 
 (interés anual dividido entre 365).
 
-ingresarDinero: Operación que recibe un número e ingresa esa cantidad en la cuenta.
-
 retirarDinero: Operación que recibe un número y extrae esa cantidad de la cuenta 
 (si hay saldo disponible), sino debe lanzar una excepción.
 '''
+class Cuenta:
+    def __init__(self, nroCuenta, dni, saldoInicial, interesAnual):
+        self.nroCuenta = validarTipo(nroCuenta, 'nroCuenta', int, nroCuenta > 0, 'o el nro de cuenta ingresado fue negativo')
+        self.dni = validarTipo(dni, 'dni', int, dni > 0, 'o el numero de dni ingresado fue menor a 0')
+        self.saldo = validarTipo(saldoInicial, 'saldoInicial', float, saldo > 0, ' o el saldo ingresado fue negativo') 
+        self.interesAnual = validarTipo(interesAnual, 'interesAnual', float, interesAnual > 0, 'o el interes anual ingresado fue negativo')
+
+    def __repr__(self):
+        return (f'Cuenta Nro: {str(self.nroCuenta)} - Titular: {str(self.dni)} (${str(self.saldo)})')
+    
+    #Se asume que esta funcion tiene que actualizarse manualmente, 
+    # por lo que se actualiza con el interes correspondiente a la cantidad de dias pasados por parametro
+    def actualizarSaldo(self, dias): 
+        interesAplicado = (self.interesAnual/365)*dias
+        self.saldo += (self.saldo*interesAplicado)
+
+    def ingresarDinero(self, saldo):
+        self.saldo += saldo
+
+    def retirarDinero(self, retiro):
+        if self.saldo >= retiro :
+            self.saldo -= retiro
+        else:
+            raise Exception('La cantidad de dinero que desea retirar es mayor al saldo actual de la cuenta')
 
 '''
 Ejercicio 4
