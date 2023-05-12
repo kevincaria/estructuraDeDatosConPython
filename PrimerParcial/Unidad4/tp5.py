@@ -1,3 +1,4 @@
+import numpy as np
 # Ejercicio 1
 # Implementar el TDA Pila (Stack), con las siguientes operaciones:
 
@@ -11,33 +12,40 @@
 # Esta vacía.
 # repr(). Para poder imprimir una Pila por consola
 class Pila:
-    def __init__(self, lista = []):
-      self.estructura = lista
+   def __init__(self, lista:list = []):
+      self.estructura: list = lista
 
-    def __repr__(self):
-       return self.estructura.__repr__()
+   def __repr__(self):
+      return self.estructura.__repr__()
     
-    def vaciar(self):
-       self.estructura.clear()
+   def vaciar(self):
+      self.estructura.clear()
 
-    def apilarElemento(self, elemento):
-       self.estructura.append(elemento)
+   def apilarElemento(self, elemento):
+      self.estructura.append(elemento)
 
-    def desapilarElemento(self):
+   def desapilarElemento(self):
       if not self.estaVacia():
         return self.estructura.pop()
+      else:
+         raise Exception('No hay elementos para desapilar')
   
-    def primerElemento(self):
-       return self.estructura[self.tamaño()-1]
+   def primerElemento(self):
+      return self.estructura[self.tamaño()-1]
     
-    def tamaño(self):
-       return len(self.estructura)
+   def tamaño(self):
+      return len(self.estructura)
     
-    def clonar(self):
-       return self.estructura #???
+   def clonar(self):
+      return Pila(self.estructura.copy())
     
-    def estaVacia(self):
-       return self.tamaño() == 0
+   def estaVacia(self):
+      return self.tamaño() == 0
+   
+   def apilarPila(self,pilaAApilar):
+      while not(pilaAApilar.estaVacia()):
+         self.apilarElemento(pilaAApilar.desapilarElemento())
+
     
 # A partir del Ejercicio 2 vamos a trabajar fuera del TDA Pila usando la interface que 
 # creamos en el Ejercicio 1. Es decir, se pueden usar solo las operaciones de la interface, 
@@ -64,39 +72,28 @@ def ejercicio2():
 # Ejercicio 3
 # Escribir una función que invierta el orden de una pila. No debe devolver una nueva 
 # pila invertida, sino invertir la pila que ingresa por parámetro.
-pilaEnteros = Pila([1,2,3,4,5,6])
+pilaEnteros = Pila([1,2,3])
 
-def ejercicio3(pilaEnteros:Pila):
-  pilaAux = Pila()
+def invertirPila(pila: Pila):
+   pilaAux = Pila()
+   
+   while not pila.estaVacia():
+      pilaAux.apilarElemento(pila.desapilarElemento())
+      print(pila)
 
-  for elemento in reversed(pilaEnteros.estructura):
-    pilaAux.apilarElemento(elemento)
+   pila.apilarPila(pila)
 
-  pilaEnteros.vaciar()
-  pilaEnteros = pilaAux.clonar()
-  # for elemento in pilaAux.estructura:
-  #    pilaEnteros.apilarElemento(elemento)
-
-print(pilaEnteros)
-ejercicio3(pilaEnteros)
-print(pilaEnteros)
 # Ejercicio 4
 # Escribir una función que toma el último elemento de una pila(la base) y lo ponga 
 # en la cima (de la misma pila), respetando el orden del resto de los elementos. 
 # Utilizar una pila auxiliar.
 
 def Ejercicio4(pila:Pila):
-  pilaAux = Pila()
-  
-  for elemento in range(2,pila.tamaño()+1):
-     pilaAux.apilarElemento(elemento)
+   invertirPila(pila)
+   primerElemento = pila.desapilarElemento()
 
-  pilaAux.apilarElemento(pila.estructura[0])
-  pila.vaciar()
-  print(pilaAux)
-
-
-
+   invertirPila(pila)
+   pila.apilarElemento(primerElemento) # No funciona, corregir
 
 # Ejercicio4(pilaEnteros)
 
