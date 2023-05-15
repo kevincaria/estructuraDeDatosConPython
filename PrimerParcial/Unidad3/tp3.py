@@ -253,7 +253,12 @@ def repetirPalabra(palabra,cantidad):
 # Escribir una función recursiva que calcule el número combinatorio, es decir, 
 # las combinaciones de N elementos tomados de a M, usando la siguiente expresión:
 
-# numeroCombiantorio.png
+def combinatorio(n, m):
+    if m == 0 or n == m:
+        return 1
+    else:
+        return combinatorio(n-1, m-1) + combinatorio(n-1, m)
+
 
 # Ejercicio 13
 # Juan y María empiezan a trabajar el mismo día en dos empresas distintas. 

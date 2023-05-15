@@ -251,7 +251,29 @@ retorna una variable de tipo tiempo, en horas minutos y segundos.
 
 mayorDuracion: Operación que recibe dos variables de tipo tiempo y retorna la de mayor duración.
 '''
+class Tiempo:
+    def __init__(self, horas = 0, minutos = 0, segundos = 0):
+        self.horas = validarTipo(horas, 'horas', int, horas > 0, 'o el nro de horas ingresado fue negativo')
+        self.minutos = validarTipo(minutos, 'minutos', int, minutos > 0 and minutos < 60, 'o el nro de minutos ingresado fue negativo')
+        self.segundos = validarTipo(segundos, 'segundos', int, segundos > 0 and segundos < 60, 'o el nro de segundos ingresado fue negativo')
 
+    def __repr__(self):
+        return (f'{self.horas}:{self.minutos}:{self.segundos}')
+    
+    def tiempoASegundos(self):
+        return self.segundos + self.minutos*60 + self.horas*3600
+    
+    def tiempoDesdeSegundos(self, segundos):
+        horas = segundos // 3600
+        minutos = (segundos % 3600) // 60
+        segundos = segundos % 60
+        return Tiempo(horas, minutos, segundos)
+    
+    def mayorDuracion(self,tiempoAComparar):
+        if self.tiempoASegundos() > tiempoAComparar.tiempoASegundos():
+            return self
+        else:
+            return tiempoAComparar
 '''
 Ejercicio 5
 Las plataformas de música online como YouTube y Spotify almacenan la información asociada 
@@ -282,3 +304,36 @@ masVotada: Operacion que recibe dos canciones y sin son del mismo artista y
 del mismo género musical, retorna la que tiene mayor cantidad de likes. 
 En caso contrario debe lanzar una excepción.
 '''
+
+class Cancion:
+    def __init__(self, nombre, artista, duracion, genero, año, likes):
+        self.nombre = nombre
+        self.artista = artista
+        self.duracion: Tiempo = duracion
+        self.genero = genero
+        self.año = año
+        self.likes = likes
+
+    def __repr__(self):
+        return(f'{self.nombre} - {self.artista} ({self.duracion.__repr__()})')
+    
+    def agregaLikes(self, likes):
+        self.likes += likes
+
+    def mayorDuracion(self, otraCancion):
+        if self.duracion.mayorDuracion(otraCancion.duracion) == self.duracion:
+            return self
+        else:
+            return otraCancion
+        
+    def mayorLikes(self, otraCancion):
+        if self.likes > otraCancion.likes:
+            return self
+        else:
+            return otraCancion
+        
+    def masVotadas(self, otraCancion):
+        if self.artista == otraCancion.artista and self.genero == otraCancion.genero:
+            return self.mayorLikes(otraCancion)
+        else:
+            raise Exception('Esta comparando dos canciones de distinto artista o/y distinto genero')

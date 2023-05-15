@@ -279,7 +279,24 @@ def arregloConCaracter(arreglo,caracter):
 
 # Nota: Van a tener que copiar el TDA "Tiempo" en el bloque de código de abajo 
 # y para que un print de un vector de variables de tipo "Tiempo" funcione, tienen que programar la operacion "__repr__()" en el TDA "Tiempo".
+import Unidad2.tp2 as tp2
 
+t1 = tp2.Tiempo(1, 20, 30)
+t2 = tp2.Tiempo(2, 45, 15)
+t3 = tp2.Tiempo(0, 15, 0)
+
+vectorTiempos = np.array([t1, t2, t3])
+
+def tiemposMayorAUnaHora(vectorTiempos:np.ndarray[tp2.Tiempo]):
+    hora = tp2.Tiempo(1,0,0)
+    horasConMasDeUnaHora = np.empty((len(vectorTiempos),), dtype=tp2.Tiempo)
+    indiceNuevo = 0
+    for i in range(len(vectorTiempos)):
+        if vectorTiempos[i].tiempoASegundos() > hora.tiempoASegundos():
+            horasConMasDeUnaHora[indiceNuevo] = vectorTiempos[i]
+            indiceNuevo +=1
+
+    return horasConMasDeUnaHora
 
 # Ejercicio extra
 # hacer una funcion recursiva que reciba un arreglo y retorne el minimo
