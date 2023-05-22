@@ -1,4 +1,5 @@
 import numpy as np
+import copy as cp
 # Ejercicio 1
 # Implementar el TDA Pila (Stack), con las siguientes operaciones:
 
@@ -37,14 +38,20 @@ class Pila:
       return len(self.estructura)
     
    def clonar(self):
-      return Pila(self.estructura.copy())
-    
+       return Pila(self.estructura.copy())
+
    def estaVacia(self):
       return self.tamaño() == 0
    
    def apilarPila(self,pilaAApilar):
       while not(pilaAApilar.estaVacia()):
          self.apilarElemento(pilaAApilar.desapilarElemento())
+
+   def apilarPilaOrdenada(self, pilaAApilar):
+      pilaAux = Pila()
+      while not(pilaAApilar.estaVacia()):
+         pilaAux.apilarElemento(pilaAApilar.desapilarElemento())
+      self.apilarPila(pilaAux)
 
     
 # A partir del Ejercicio 2 vamos a trabajar fuera del TDA Pila usando la interface que 
@@ -75,13 +82,12 @@ def ejercicio2():
 pilaEnteros = Pila([1,2,3])
 
 def invertirPila(pila: Pila):
-   pilaAux = Pila()
-   
-   while not pila.estaVacia():
-      pilaAux.apilarElemento(pila.desapilarElemento())
-      print(pila)
+   pilaAux = pila.clonar()
+   pila.vaciar()
+   pila.apilarPila(pilaAux)
 
-   pila.apilarPila(pila)
+invertirPila(pilaEnteros)
+print(pilaEnteros)
 
 # Ejercicio 4
 # Escribir una función que toma el último elemento de una pila(la base) y lo ponga 
@@ -89,12 +95,16 @@ def invertirPila(pila: Pila):
 # Utilizar una pila auxiliar.
 
 def Ejercicio4(pila:Pila):
-   invertirPila(pila)
-   primerElemento = pila.desapilarElemento()
+   pilaAux = Pila()
+   pilaAux.apilarPila(pila)
+   base = pilaAux.desapilarElemento()
+   pila.vaciar()
+   pila.apilarPila(pilaAux)
+   pila.apilarElemento(base)
 
-   invertirPila(pila)
-   pila.apilarElemento(primerElemento) # No funciona, corregir
-
+print(pilaEnteros)
+Ejercicio4(pilaEnteros)
+print(pilaEnteros)
 # Ejercicio4(pilaEnteros)
 
 
