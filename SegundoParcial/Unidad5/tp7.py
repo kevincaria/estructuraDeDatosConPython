@@ -268,10 +268,6 @@ def ejercicio8(dic: Diccionario, alumnoNuevo:str, materia:str):
         else:
            dic.insert(alumnoNuevo, {materia})
 
-ejercicio8(diccionario,'Kevin','Estructura de datos')
-ejercicio8(diccionario,'Kevin','Objetos 1')
-print(diccionario)
-
 # Ejercicio 9
 # Tenemos un diccionario del tipo <Entero , Lista de enteros> (clave número entero, significado lista de enteros) que dado un numero X, guarda las posibles combinaciones de ese número con otros.
 
@@ -283,8 +279,19 @@ print(diccionario)
 
 # Lista de salida = [ (5 , 5) ,(5 , 3) , (5 , 7) , (8 , 15) , (8 , 3) ]
 
-# [ ]
+entrada = Diccionario()
+entrada.insert(5 , [10 , 3 , 7 ])
+entrada.insert(8, [ 15 , 3 ] )
 
+def ejercicio9 (diccionario:Diccionario):
+  salida = []
+
+  for key in diccionario.keys():
+    for value in diccionario[key]:
+      salida.append((key, value))
+
+  return salida
+         
 # Ejercicio 10
 # Escribir una función que haga lo inverso del Ejercicio 9.
 
@@ -294,7 +301,16 @@ print(diccionario)
 
 # Diccionario de salida = { (5 , [5 , 3 , 7 ] ) , ( 8, [ 15 , 3 ] ) }
 
-# [ ]
+def ejercicio10(lista:list):
+  salida = Diccionario()
+
+  for tupla in lista:
+    if tupla[0] in salida:
+      salida[tupla[0]].append(tupla[1])
+    else:
+      salida[tupla[0]] = [tupla[1]]
+
+  return salida
 
 # Ejercicio 11
 # Escribir el TDA MatrizDePixels, que modele una matriz de pixels (imagen) de N x M usando el tipo array del paquete numpy, donde cada pixel tiene un color representado por un número entero entre 0 y 255.
