@@ -176,6 +176,13 @@ def ejercicio4(lista: list):
 
     return listaNueva
   
+def ejercicio4Profe(lista:list):
+    d = Diccionario()
+    for elem in lista:
+       d.insert(elem,None)
+
+    return d.keys()
+
 # Ejercicio 5
 # Rehacer le ejercicio 4 pero retornando un diccionario en lugar de una lista.
 
@@ -323,9 +330,33 @@ def ejercicio10(lista:list):
 
 # b) Crear una MatrizDePixels de 100000 x 50000 y agregarle valores a dos pixels.
 
-# Explicar porque el inciso b da un error
+class MDP:
+	def __init__(self, filas, columnas):
+		self.matriz = Diccionario()
+		self.filas = filas
+		self.columnas = columnas
+                
+	def leer(self,fila,columna):
+		if fila > self.filas or columna > self.columnas:
+			raise Exception('Coordenada fuera de rango')
+		elif not (fila,columna) in self.matriz:
+			return 0
+		else:
+			return self.matriz[(fila,columna)]
+	
+	def escribir(self,fila,columna,numero):
+		if fila > self.filas or columna > self.columnas:
+			raise Exception('Coordenada fuera de rango')
+		elif (fila,columna) in self.matriz:
+			self.matriz[(fila,columna)] = numero
+		else:
+			self.matriz.insert((fila,columna), numero)
+		
+        
+	def __repr__(self):
+		return str(self.matriz)
 
-# [ ]
+      
 
 # Ahora escribir el TDA MatrizDePixelsDict, que modele una matriz de pixels (imagen) de N x M usando un diccionario de <(fila,columna) , pixel>, donde cada pixel tiene un color representado por un número entero entre 0 y 255 y el par (fila,columna) indica la posición del pixel en la matriz.
 
