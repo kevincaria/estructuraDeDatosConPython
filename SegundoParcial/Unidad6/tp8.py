@@ -86,16 +86,12 @@ class Lista:
         else:
             raise Exception('Posicion inválida')
         
-    def tamaño(self): #ESTA MAL
+    def tamaño(self):
         cantidad = 0
-
-        if self.primero != None:
-
-            aux = self.primero
-            while aux != None:
-                cantidad += 1
-                aux = aux.siguiente
-        
+        aux = self.primero
+        while aux != None:
+            cantidad += 1
+            aux = aux.siguiente
         return cantidad
     
     def estaVacia(self):
@@ -129,40 +125,92 @@ class Lista:
                 self.tamaño += 1
         else:
             raise Exception('Posicion inválida')
-        
-    def eliminarOcurrencias(self, elemento):
-        contador = 0
-
-        while self.eliminarElemento(elemento):
-            self.eliminarElemento(elemento)
-            contador +=1
-
-        return contador
 
     def eliminarElemento(self, elemento):
-        aux = self.primero
-        i = 0
-        resultado = False
-        while aux.siguiente != None or resultado == False:
-            if aux.valor == elemento:
-                self.eliminar(i)
-                resultado = True
-            else:
-                aux = aux.siguiente
-                i += 1
+        contador = 0
+        listaDePosiciones = self.buscarElemento(elemento)
 
-        return resultado
+        while not listaDePosiciones.estaVacia():
+            posicionAEliminar = listaDePosiciones.obtener()
+            self.eliminar(posicionAEliminar)
+            contador += 1
+            listaDePosiciones = self.buscarElemento(elemento)
+
+        return contador
                 
+    def buscarElemento(self, elemento):
+        listaDePosiciones = Lista()
+
+        for i in range(self.tamaño):
+            if self.obtener(i) == elemento:
+                listaDePosiciones.insertar(i)
+
+        return listaDePosiciones
+    
+    def ponerInicioAlFinal(self):
+        self.insertar(self.obtener(0))
+        self.eliminar(0)
+
+    def ponerFinalAlInicio(self):
+        self.insertarEnPosicion(self.obtener(self.tamaño-1),0)
+        self.eliminar(self.tamaño-1)
+
+    def reemplazarElemento(self, elementoNuevo, elementoAReemplazar):
+        listaDePosiciones = self.buscarElemento(elementoAReemplazar)
+        self.eliminarElemento(10)
+
+        for i in range(listaDePosiciones.tamaño):
+            self.insertarEnPosicion(elementoNuevo,listaDePosiciones.obtener(i))
+            
+    def duplicar(self):
+
+        for i in range(self.tamaño):
+            self.insertar(self.obtener(i))
+        
+    def recorridoSalteado(self):
+        listaSalteada = Lista()
+        for i in range(self.tamaño):
+            if i%2 == 0:
+                listaSalteada.insertar(self.obtener(i))
+            
+        print(listaSalteada)
+
+    def recorridoParImpar(self):
+        aux = self.primero
+        contador = 0
+
+        while aux.siguiente != None:
+            if contador < self.tamaño:
+                if self.obtener(contador)%2 == 0:
+                    print(self.obtener(contador))
+                    contador+=1
+                else:
+                    print(self.obtener(contador))
+                    contador +=2
+
+    def reemplazarElementoMultiplicado(self, comparador, multiplicador):
+
+        for i in range(self.tamaño):
+            if self.obtener(i) >= comparador:
+                nuevoElemento = self.obtener(i)*multiplicador
+                self.reemplazar(nuevoElemento,i)
+        
+    def reemplazar(self, elemento, posicion):
+            self.eliminar(posicion)
+            self.insertarEnPosicion(elemento,posicion)
+            
+
 # Ejercicio 2
 # Escribir una operación del TDA Lista que intercambie los dos primeros nodos de la lista.
 lista = Lista()
+lista.insertar(10)
 lista.insertar(66)
 lista.insertar(99)
 lista.insertar(10)
 lista.insertar(10)
-lista.insertar(10)
-print(lista)
-print(lista.eliminarElemento(10))
+lista.insertar(88)
+
+lista.reemplazarElementoMultiplicado(50,0)
 print(lista)
 
 def ejercicio2(lista):
@@ -188,15 +236,6 @@ def ejercicio2(lista):
 
 # Entonces, posiciones = [ 0 , 1 , 4 , 7 ]
 
-def ejercicio3(lista: Lista, elemento):
-    listaDePosiciones = Lista()
-
-    for i in range(lista.tamaño):
-        if lista.obtener(i) == elemento:
-            listaDePosiciones.insertar(i)
-
-    return listaDePosiciones
-
 # Ejercicio 4
 # Escribir una operación del TDA Lista que elimine todas las ocurrencias de un elemento que recibe por parámetro y devuelva la cantidad de veces que se elimino el elemento. Se deben eliminar todos los nodos que contengan al elemento.
 
@@ -209,10 +248,8 @@ def ejercicio3(lista: Lista, elemento):
 # Entonces, cant = 5 y lista1 = [ 1 , 4 , 8 , 9 , 10 ]
 
 
-
 # Ejercicio 5
 # Escribir una operación del TDA Lista que saque el nodo que esta al inicio de la lista (posición cero) y lo ponga en el final. Hacer otra que haga lo contrario, saque el nodo del final y lo ponga al inicio.
-
 # [ ]
 
 # Ejercicio 6
