@@ -27,7 +27,186 @@
 # Obtener mínimo del arbol.
 # Obtener profundidad del árbol: Altura de la raíz. Deben hacer una operación que calcule la altura de un nodo (del tipo NodoArbol).
 # Obtener profundidad de un elemento (Nivel): Recibe un elemento y retorna su profundidad si el elemento esta en el árbol y None en caso contrario.
-# [ ]
+class Arbol:
+    class Nodo:
+        def __init__(self, dato = None, izquierdo = None, derecho = None):
+            self.dato = dato
+            self.izquierdo = izquierdo
+            self.derecho = derecho
+
+        def tieneDerecho(self):
+            return self.derecho != None
+        
+        def tieneIzquierdo(self):
+            return self.izquierdo != None
+        
+        def preOrden(self):
+            print(self.dato)
+            if self.tieneIzquierdo():
+                self.izquierdo.preOrden()
+            if self.tieneDerecho():
+                self.derecho.preOrden()
+
+        def inOrden(self):
+            if self.tieneIzquierdo():
+                self.izquierdo.inOrden()
+            print(self.dato)
+            if self.tieneDerecho():
+                self.derecho.inOrden()
+
+        def postOrden(self):
+            if self.tieneIzquierdo():
+                self.izquierdo.postOrden()
+            if self.tieneDerecho():
+                self.derecho.postOrden()
+            print(self.dato)
+
+        def insertar(self, nuevo):
+            if self.dato == nuevo.dato:
+                print('El elemento ya esta en el arbol')
+            elif nuevo.dato < self.dato:
+                if self.tieneIzquierdo():
+                    self.izquierdo.insertar(nuevo)
+                else:
+                    self.izquierdo = nuevo
+            else:
+                if self.tieneDerecho():
+                    self.derecho.insertar(nuevo)
+                else:
+                    self.derecho = nuevo
+
+        def pertenece(self, datoABuscar):
+            if datoABuscar == self.dato:
+                return True
+            elif datoABuscar < self.dato and self.tieneIzquierdo():
+                return self.izquierdo.pertenece(datoABuscar)
+            elif datoABuscar > self.dato and self.tieneDerecho():
+                return self.derecho.pertenece(datoABuscar)   
+            else:
+                return False
+            
+        def esHoja(self):
+            return not self.tieneIzquierdo() and not self.tieneDerecho()
+        
+        def cantidadHojas(self):
+            cantidad = 0
+            if self.esHoja():
+                cantidad += 1
+            else:
+                if self.tieneIzquierdo():
+                    cantidad += self.izquierdo.cantidadHojas()
+                if self.tieneDerecho():
+                    cantidad += self.derecho.cantidadHojas()
+            return cantidad
+
+        def imprimirNodosNivel(self, nivelActual, nivelABuscar):
+            if nivelActual == nivelABuscar:
+                print(self.dato)
+            else:
+                if self.tieneIzquierdo():
+                    self.izquierdo.imprimirNodosNivel(nivelActual+1, nivelABuscar)
+                if self.tieneDerecho():
+                    self.derecho.imprimirNodosNivel(nivelActual+1, nivelABuscar)
+
+        def minimo(self):
+            if self.tieneIzquierdo():
+                return self.izquierdo.minimo()
+            else:
+                return self.dato
+    
+        def maximo(self):
+            if self.tieneDerecho():
+                return self.derecho.maximo()
+            else:
+                return self.dato
+        
+        def esAbb(self):
+            criterioIzquierdo = True
+            criterioDerecho = True
+            if self.tieneIzquierdo():
+                criterioIzquierdo = self.izquierdo.esAbb() and self.dato > self.minimo()
+            
+            if self.tieneDerecho():
+                criterioDerecho = self.derecho.esAbb() and self.dato < self.maximo()
+
+            return criterioIzquierdo and criterioDerecho
+            
+    def __init__(self):
+        self.raiz = None
+
+    def estaVacio(self):
+        return self.raiz == None
+    
+    def preOrden(self):
+        if not self.estaVacio():
+            self.raiz.preOrden()
+        else:
+            print('Arbol vacio')
+
+    def inOrden(self):
+        if not self.estaVacio():
+            self.raiz.inOrden()
+        else:
+            print('Arbol vacio')
+
+    def postOrden(self):
+        if not self.estaVacio():
+            self.raiz.postOrden()
+        else:
+            print('Arbol vacio')
+
+    def insertar(self, dato):
+        nuevoNodo = self.Nodo(dato)
+        if self.estaVacio():
+            self.raiz = nuevoNodo
+        else:
+            self.raiz.insertar(nuevoNodo)
+
+    def pertenece(self, datoABuscar):
+        if self.estaVacio():
+            return False
+        else:
+            return self.raiz.pertenece(datoABuscar)
+
+    def cantidadHojas(self):
+        if self.estaVacio():
+            return 0
+        else:
+            return self.raiz.cantidadHojas()
+        
+    def imprimirNodosNivel(self,nivelABuscar):
+        self.raiz.imprimirNodosNivel(0, nivelABuscar)
+
+    def minimo(self):
+        if self.estaVacio():
+            print('El arbol esta vacio')
+        else:
+            return self.raiz.minimo()
+    
+    def maximo(self):
+        if self.estaVacio():
+            print('El arbol esta vacio')
+        else:
+            return self.raiz.maximo()
+    
+    def esAbb(self):
+        if self.estaVacio():
+            return True
+        else:
+            return self.raiz.esAbb()
+
+arbol = Arbol()
+arbol.insertar(50)
+arbol.insertar(80)
+arbol.insertar(30)
+arbol.insertar(10)
+arbol.insertar(35)
+arbol.insertar(40)
+arbol.insertar(60)
+arbol.insertar(95)
+arbol.insertar(71)
+print(arbol.minimo())
+print(arbol.esAbb())
 # from graphviz import Digraph
 # import copy as cp 
 
