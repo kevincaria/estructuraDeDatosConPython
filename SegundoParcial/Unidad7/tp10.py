@@ -27,6 +27,8 @@
 # Obtener mínimo del arbol.
 # Obtener profundidad del árbol: Altura de la raíz. Deben hacer una operación que calcule la altura de un nodo (del tipo NodoArbol).
 # Obtener profundidad de un elemento (Nivel): Recibe un elemento y retorna su profundidad si el elemento esta en el árbol y None en caso contrario.
+from graphviz import Digraph
+import copy as cp 
 class Arbol:
     class Nodo:
         def __init__(self, dato = None, izquierdo = None, derecho = None):
@@ -124,12 +126,50 @@ class Arbol:
             criterioIzquierdo = True
             criterioDerecho = True
             if self.tieneIzquierdo():
-                criterioIzquierdo = self.izquierdo.esAbb() and self.dato > self.minimo()
+                criterioIzquierdo = self.izquierdo.esAbb() and self.dato > self.izquierdo.maximo()
             
             if self.tieneDerecho():
-                criterioDerecho = self.derecho.esAbb() and self.dato < self.maximo()
+                criterioDerecho = self.derecho.esAbb() and self.dato < self.derecho.minimo()
 
             return criterioIzquierdo and criterioDerecho
+        
+        def eliminar(self, padre, porDonde, dato):
+            if self.dato == dato:
+                #eliminar hoja
+                if self.esHoja():
+                    if porDonde == 'Izquierda':
+                        padre.izquierdo = None
+                    else:
+                        padre.derecho = None
+                #Si no es hoja, elimino nodo con hijos
+                else:
+                    if self.tieneIzquierdo():
+                        self.dato = self.izquierdo.maximo()
+                        self.izquierdo.eliminar(self, 'Izquierda', self.izquierdo.maximo())
+                    else:
+                        self.dato = self.derecho.minimo()
+                        self.derecho.eliminar(self, 'Derecho', self.derecho.minimo())
+            else:
+                if self.dato < dato:
+                    self.derecho.eliminar(self, 'Izquierda', dato)
+                else:
+                    self.izquierdo.eliminar(self, 'Derecho', dato)
+            
+        def treePlot(self, dot):
+            if self.tieneIzquierdo():
+                dot.node(str(self.izquierdo.dato), str(self.izquierdo.dato))
+                dot.edge(str(self.dato), str(self.izquierdo.dato))
+                self.izquierdo.treePlot(dot)
+            else:
+                dot.node("-"+str(self.dato)+"l", "-")
+                dot.edge(str(self.dato), "-"+str(self.dato)+"l")
+            if self.tieneDerecho():
+                dot.node(str(self.derecho.dato), str(self.derecho.dato))
+                dot.edge(str(self.dato), str(self.derecho.dato))
+                self.derecho.treePlot(dot)
+            else:
+                dot.node("-"+str(self.dato)+"r", "-")
+                dot.edge(str(self.dato), "-"+str(self.dato)+"r")
             
     def __init__(self):
         self.raiz = None
@@ -195,6 +235,21 @@ class Arbol:
         else:
             return self.raiz.esAbb()
 
+    def eliminar(self, dato):
+        if self.pertenece(dato):
+            if self.raiz.dato == dato:
+                '''and self.cantidadNodos()  ''' 
+                self.raiz = None
+            else:
+                self.raiz.eliminar(None, ' ', dato)
+
+    def treePlot(self, fileName='arbol'):
+      if not self.estaVacio():
+        treeDot = Digraph()
+        treeDot.node(str(self.raiz.dato), str(self.raiz.dato))
+        self.raiz.treePlot(treeDot)
+        treeDot.render(fileName, view=True)
+
 arbol = Arbol()
 arbol.insertar(50)
 arbol.insertar(80)
@@ -205,10 +260,10 @@ arbol.insertar(40)
 arbol.insertar(60)
 arbol.insertar(95)
 arbol.insertar(71)
-print(arbol.minimo())
-print(arbol.esAbb())
-# from graphviz import Digraph
-# import copy as cp 
+arbol.eliminar(60)
+
+print(arbol.inOrden())
+
 
 # class ABB:
 #   def treePlot(self, fileName='arbol'):
