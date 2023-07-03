@@ -27,7 +27,18 @@
 # Obtener mínimo del arbol.
 # Obtener profundidad del árbol: Altura de la raíz. Deben hacer una operación que calcule la altura de un nodo (del tipo NodoArbol).
 # Obtener profundidad de un elemento (Nivel): Recibe un elemento y retorna su profundidad si el elemento esta en el árbol y None en caso contrario.
-from graphviz import Digraph
+
+# • Trayectoria entre 2 nodos : Secuencia de nodos entre ellos. 
+# • Largo de trayectoria: Número de enlaces 
+# • Grado de un nodo: Cantidad de subárboles hijos 
+# • Peso de un árbol: Cantidad total de nodos 
+# • Altura de un nodo: Largo de trayectoria a la hoja mas lejana 
+# • Profundidad de un nodo: Largo de trayectoria desde la raíz
+# • Profundidad de árbol: Prof. de hoja mas profunda 
+# • Nodos a una misma profundidad -> Están al mismo nivel 
+# • Altura raíz = Profundidad de árbol 
+# • Grado de hojas = 0 
+
 import copy as cp 
 class Arbol:
     class Nodo:
@@ -155,22 +166,63 @@ class Arbol:
                 else:
                     self.izquierdo.eliminar(self, 'Derecho', dato)
             
-        def treePlot(self, dot):
-            if self.tieneIzquierdo():
-                dot.node(str(self.izquierdo.dato), str(self.izquierdo.dato))
-                dot.edge(str(self.dato), str(self.izquierdo.dato))
-                self.izquierdo.treePlot(dot)
+        def sumarHojas(self):
+            resultado = 0
+            if self.esHoja():
+                resultado = self.dato
             else:
-                dot.node("-"+str(self.dato)+"l", "-")
-                dot.edge(str(self.dato), "-"+str(self.dato)+"l")
-            if self.tieneDerecho():
-                dot.node(str(self.derecho.dato), str(self.derecho.dato))
-                dot.edge(str(self.dato), str(self.derecho.dato))
-                self.derecho.treePlot(dot)
+                if self.tieneDerecho():
+                    resultado += self.derecho.sumarHojas()
+
+                if self.tieneIzquierdo():
+                    resultado += self.izquierdo.sumarHojas()
+
+            return resultado
+        
+        def estaBalanceado(self):
+            criterioIzquierdo = True
+            criterioDerecho = True
+            if self.esHoja():
+                return True
             else:
-                dot.node("-"+str(self.dato)+"r", "-")
-                dot.edge(str(self.dato), "-"+str(self.dato)+"r")
+                if self.tieneIzquierdo():
+                    criterioIzquierdo = criterioIzquierdo and self.izquierdo.estaBalanceado() and abs(self.altura(self.izquierdo) - self.altura(self.derecho)) <=1
+                if self.tieneDerecho():
+                    criterioDerecho = criterioDerecho and self.derecho.estaBalanceado() and abs(self.altura(self.izquierdo) - self.altura(self.derecho)) <=1
+
+            return criterioDerecho and criterioIzquierdo
+        
+        def altura(self,nodo):
+            if nodo == None:
+                return 0
+            else:
+                return 1 + max(self.altura(nodo.derecho),self.altura(nodo.izquierdo))
+
+        def cantNodos(self, nodo):
+            if (nodo == None):
+                return 0
+            else:
+                return 1 + self.cantNodos(nodo.izquierdo) + self.cantNodos(nodo.derecho)
             
+        def imprimirFrontera(self):
+            if self.esHoja():
+                print(self.dato)
+            else:
+                if self.tieneIzquierdo():
+                    self.izquierdo.imprimirFrontera()
+                if self.tieneDerecho():
+                    self.derecho.imprimirFrontera()
+
+        def listaNodosPares(self, lista:list):
+            if self.tieneIzquierdo():
+                self.izquierdo.listaNodosPares(lista)
+
+            if self.dato % 2 == 0:
+                lista.append(self.dato)
+
+            if self.tieneDerecho():
+                self.derecho.listaNodosPares(lista)
+
     def __init__(self):
         self.raiz = None
 
@@ -207,13 +259,15 @@ class Arbol:
             return False
         else:
             return self.raiz.pertenece(datoABuscar)
-
+        
+#calcula la cantidad de hojas de un árbol.
     def cantidadHojas(self):
         if self.estaVacio():
             return 0
         else:
             return self.raiz.cantidadHojas()
-        
+
+# muestra los elementos que estan en el nivel N de un ABB, el nivel se recibe por parámetro.      
     def imprimirNodosNivel(self,nivelABuscar):
         self.raiz.imprimirNodosNivel(0, nivelABuscar)
 
@@ -243,12 +297,53 @@ class Arbol:
             else:
                 self.raiz.eliminar(None, ' ', dato)
 
-    def treePlot(self, fileName='arbol'):
-      if not self.estaVacio():
-        treeDot = Digraph()
-        treeDot.node(str(self.raiz.dato), str(self.raiz.dato))
-        self.raiz.treePlot(treeDot)
-        treeDot.render(fileName, view=True)
+    def sumarHojas(self):
+        if self.estaVacio():
+            return 0
+        else:
+            return self.raiz.sumarHojas()
+
+    def estaBalanceado(self):
+        if self.estaVacio():
+            return True
+        else:
+            return self.raiz.estaBalanceado()
+    
+    def altura(self):
+        if self.estaVacio():
+            return 0
+        else:
+            return self.raiz.altura()
+        
+    def cantNodos(self):
+        if self.estaVacio():
+            return 0
+        else:
+            return self.raiz.cantNodos(self.raiz)
+
+# Se define por frontera de un árbol, la secuencia formada por los elementos almacenados en las hojas de un árbol, tomados de izquierda a derecha        
+    def imprimirFrontera(self):
+        if self.estaVacio():
+            print("El árbol está vacío")
+        else:
+            self.raiz.imprimirFrontera()
+
+# retorne una lista ordenada (de menor a mayor) con todos los números pares que forman parte del árbol.
+    def listaNodosPares(self):
+        listaPares = list()
+        if self.estaVacio():
+            listaPares.append(0)
+        else:
+            self.raiz.listaNodosPares(listaPares)
+        
+        return listaPares
+
+# Ejercicio 6
+# Escribir una operación del TDA ABB, que rote el árbol completo, es decir, los elementos del subárbol izquierdo deben ser mayores a la raíz y los del subárbol derecho menores (para todos los nodos del arbol). No se debe retornar un nuevo arbol, sino modificar el arbol desde el que se llama a la operación.
+
+# [ ]
+# Ejercicio 7
+# Escribir una operación del TDA ABB llamada cantidadNodosEnNivel que retorna la cantidad de nodos del arbol en un nivel determinado
 
 arbol = Arbol()
 arbol.insertar(50)
@@ -261,60 +356,4 @@ arbol.insertar(60)
 arbol.insertar(95)
 arbol.insertar(71)
 arbol.eliminar(60)
-
-print(arbol.inOrden())
-
-
-# class ABB:
-#   def treePlot(self, fileName='arbol'):
-#     if not self.estaVacio():
-#       treeDot = Digraph()
-#       treeDot.node(str(self.raiz.dato), str(self.raiz.dato))
-#       self.raiz.treePlot(treeDot)
-#       treeDot.render(fileName, view=True)
-
-#   ##################################################################
-#   ##################################################################
-#   class __NodoArbol: 
-#     def treePlot(self, dot):
-#       if self.tieneIzquierdo():
-#         dot.node(str(self.izquierdo.dato), str(self.izquierdo.dato))
-#         dot.edge(str(self.dato), str(self.izquierdo.dato))
-#         self.izquierdo.treePlot(dot)
-#       else:
-#         dot.node("-"+str(self.dato)+"l", "-")
-#         dot.edge(str(self.dato), "-"+str(self.dato)+"l")
-#       if self.tieneDerecho():
-#         dot.node(str(self.derecho.dato), str(self.derecho.dato))
-#         dot.edge(str(self.dato), str(self.derecho.dato))
-#         self.derecho.treePlot(dot)
-#       else:
-#         dot.node("-"+str(self.dato)+"r", "-")
-#         dot.edge(str(self.dato), "-"+str(self.dato)+"r")
-
-# Ejercicio 2
-# Escribir una operación del TDA ABB que calcule la cantidad de hojas de un árbol.
-
-# [ ]
-
-# Ejercicio 3
-# Escribir una operación del TDA ABB que muestre los elementos que estan en el nivel N de un ABB, el nivel se recibe por parámetro.
-
-# [ ]
-
-# Ejercicio 4
-# Se define por frontera de un árbol, la secuencia formada por los elementos almacenados en las hojas de un árbol, tomados de izquierda a derecha. Escribir una operación del TDA ABB, que imprima por pantalla la frontera del árbol.
-
-# [ ]
-
-# Ejercicio 5
-# Escribir una operación del TDA ABB que retorne una lista ordenada (de menor a mayor) con todos los números pares que forman parte del árbol.
-
-# [ ]
-
-# Ejercicio 6
-# Escribir una operación del TDA ABB, que rote el árbol completo, es decir, los elementos del subárbol izquierdo deben ser mayores a la raíz y los del subárbol derecho menores (para todos los nodos del arbol). No se debe retornar un nuevo arbol, sino modificar el arbol desde el que se llama a la operación.
-
-# [ ]
-# Ejercicio 7
-# Escribir una operación del TDA ABB llamada cantidadNodosEnNivel que retorna la cantidad de nodos del arbol en un nivel determinado
+print(arbol.postOrden())

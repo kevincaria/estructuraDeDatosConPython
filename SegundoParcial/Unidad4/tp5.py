@@ -120,7 +120,7 @@ def ejercicio6(pila:Pila, elemento):
       if not elementoAMirar == elemento:
          pilaAux.apilarElemento(elementoAMirar)
 
-   pila.apilarPilaOrdenada(pilaAux)
+   pila.apilarPila(pilaAux)
    return pila
 
 # Ejercicio 7
@@ -185,7 +185,7 @@ def ejercicio9(pila:Pila, viejo, nuevo):
       else:
          pilaAux.apilarElemento(elementoAMirar)
 
-   pila.apilarPilaOrdenada(pilaAux)
+   pila.apilarPila(pilaAux)
    return pila
 
 # Ejercicio 10
@@ -208,6 +208,30 @@ def ejercicio10(pila:Pila):
          
    return pilaPares,pilaImpares
 
+def unirPilaOrdenada():
+   pila1 = Pila([1,3,6])
+   pila2 = Pila([2,4,8])
+   pilaOrdenada = Pila()
+   
+   while not pila1.estaVacia() or not pila2.estaVacia():
+      if pila1.estaVacia():
+         pilaOrdenada.apilarElemento(pila2.desapilarElemento())
+      elif pila2.estaVacia():
+         pilaOrdenada.apilarElemento(pila1.desapilarElemento())
+      else:
+         elemento1 = pila1.desapilarElemento()
+         elemento2 = pila2.desapilarElemento()
+         if elemento1 < elemento2:
+            pilaOrdenada.apilarElemento(elemento2)
+            pilaOrdenada.apilarElemento(elemento1)
+         else:
+            pilaOrdenada.apilarElemento(elemento1)
+            pilaOrdenada.apilarElemento(elemento2)
+
+   auxiliar = pilaOrdenada.clonar()
+   pilaOrdenada.vaciar()
+   pilaOrdenada.apilarPilaOrdenada(auxiliar)
+   return pilaOrdenada
 # Parte 2: Colas dinámicas
 # Ejercicio 11
 # Implementar el TDA Cola (Queue), con las siguientes operaciones:

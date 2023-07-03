@@ -37,7 +37,7 @@ class Lista:
     def insertar(self, elemento):
         nuevo = self.Nodo(elemento)
 
-        if self.tamaño == 0:
+        if self.estaVacia():
             self.primero = nuevo
         else: 
             self.primero.insertarNodo(nuevo)
@@ -126,6 +126,3 @@ lista = Lista()
 lista.insertar(1)
 lista.insertar(5)
 print(lista)
-
-#Hacer repr, obtener, insertar, insertarEnPosicion, eliminar recursivo
-#Hacer ejercicio 4 y 8 guia anterior

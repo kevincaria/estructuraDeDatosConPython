@@ -215,7 +215,7 @@ def ejercicio6(lista):
 
     for key in lista:
         if key in diccionario:
-            diccionario.__setitem__(key, diccionario.get(key) +1)
+            diccionario[key] = diccionario[key] + 1
         else:
             diccionario.insert(key,1)
 
