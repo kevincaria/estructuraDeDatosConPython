@@ -1,15 +1,32 @@
+import Unidad5.tp7 as tp7
+import Unidad6.tp8 as tp8
+import Unidad7.tp10 as tp10
+
 # Ejercicio 1
 # Escribir una función que calcule la intersección de dos diccionarios de la siguiente forma:
 
 # Si una clave está en ambos diccionarios, en la intersección el significado de dicha clave es una tupla con los valores de ambos diccionarios
 # Si una clave está en uno solo de los diccionarios, no formará parte de la intersección.
 # Ejemplo:
-
-# dic1 = {1:“casa” , 20:“perro” , 8:“gato” , 10:“mate” , 5:“auto”} y dic2 = {5:3 , 2:15 , 8:20 , 15:1 , 20:25}
+dic1 = tp7.Diccionario()
+# {1:“casa” , 20:“perro” , 8:“gato” , 10:“mate” , 5:“auto”} 
+dic1.insert(1,'casa')
+dic1.insert(2,'gato')
+dic1.insert(3, 10)
+dic2 = tp7.Diccionario()
+# {5:3 , 2:15 , 8:20 , 15:1 , 20:25}
+dic2.insert(1,3)
+dic2.insert(2,10)
 
 # inter = interseccion(dic1, dic2) -> inter = {20 : (“perro”,25) , 8 : (“gato”,20) , 5 : (“auto”,3)}
+def interseccionDiccionarios(diccionario1:tp7.Diccionario, diccionario2:tp7.Diccionario):
+    interseccion = tp7.Diccionario()
+    for clave in diccionario1.keys():
+        if clave in diccionario2:
+            interseccion.insert(clave,(diccionario1[clave],diccionario2[clave]))
+    return interseccion
 
-
+print(interseccionDiccionarios(dic1,dic2))
 # Ejercicio 2
 # Escribir una operación del TDA ABB, que calcule el promedio de los valores acumulados en el árbol. La operación puede calcular dos promedios distintos en función del valor de un parámetro de entrada: el primero es el promedio de los valores almacenados solo en las hojas del árbol, el segundo, el promedio teniendo en cuenta todos los elementos del árbol. Especificar la estructura de datos del tipo ABB y del NodoArbol utilizados.
 
@@ -86,7 +103,7 @@ def alFinalSinRepetir(self, dato):
 # Entonces, dic = {(1 , 5) , (2 , 5), (3, 8)}
 
 def maximoPorNumero(listaTuplas):
-  dicSalida = Diccionario()
+  dicSalida = tp7.Diccionario()
   for tupla in listaTuplas:
     if tupla[0] not in dicSalida:
       dicSalida[tupla[0]] = tupla[1]
@@ -231,7 +248,30 @@ def palabrasPorTamaño(listaPalabras):
 
 # Ejercicio 9
 # Escribir la operación sumaInternosMenores del TDA ABB que devuelva la suma de los elementos de los nodos internos del árbol que son menores a un valor N que se recibe por parámetro. Definir la estructura del TDA ABB utilizado. La función puede hacer uso de las siguientes operaciones del TDA ABB: estaVacio y del TDA NodoArbol: tieneIzquierdo, tieneDerecho y esHoja.
+class Arbol:
+    def sumaInternosMenores(self, N):
+        if self.estaVacio():
+            return 0
+        else:
+            return self.raiz.sumaInternosMenores(N)
+        
+    class Nodo:
+        
+        def sumaInternosMenores(self, N):
+            suma = 0
+            if self.esHoja():
+                return 0
 
+            if self.dato < N:
+                suma += self.dato
+            
+            if self.tieneIzquierdo():
+                suma += self.izquierdo.sumaInternosMenores(N)
+            
+            if self.tieneDerecho():
+                suma += self.derecho.sumaInternosMenores(N)
+            
+            return suma
 
 # Ejercicio 10
 # Crear la operación insertarCeros del TDA Lista, que inserte un 0 (cero) entre 2 números pares consecutivos. La función no debe crear una nueva lista, debe modificar la lista con la cual se llama a la operación. Definir la estructura de datos del TDA Lista utilizada. No se pueden utilizar las operaciones insertar y append del tipo Lista.
@@ -247,6 +287,18 @@ def palabrasPorTamaño(listaPalabras):
 # Entonces, lista1 = [1 , 3 , 4 , 0 , 6 , 0 , 8 , 1 , 5 , 8 , 0 , 10 , 7]
 
 
+    def insertarCeros(self):
+        aux = self.primero
+
+        while aux != None and aux.siguiente != None:
+            if aux.valor % 2 == 0 and aux.siguiente.valor % 2 == 0:
+                nuevo = self.Nodo(0)
+                nuevo.siguiente = aux.siguiente
+                aux.siguiente = nuevo
+                self.tamaño += 1
+
+            aux = aux.siguiente
+
 # Ejercicio 11
 # Escribir la función resta que recibe dos diccionarios como parámetro (dic1 y dic2) y retorna un nuevo diccionario con la resta los dos, con el siguiente criterio:
 
@@ -258,12 +310,19 @@ def palabrasPorTamaño(listaPalabras):
 
 # Ejemplo:
 
-# dic1 = {(1 , 4) , (3 , 6) , (8 , 14) , (4 , 12) , (2 , 6)} y dic2 = {(8 , 5) , (10 , 6) , (1 , 7) , (2 , 9) , (14 , 8)}
+# dic1 = {(1 , 4) , (3 , 6) , (8 , 14) , (4 , 12) , (2 , 6)} 
+# dic2 = {(8 , 5) , (10 , 6) , (1 , 7) , (2 , 9) , (14 , 8)}
 
 # dic3 = resta(dic1 , dic2)
 
 # Entonces, dic3 = {(3 , 6) , (4 , 12)}
 
+def restarDiccionarios(diccionario1:tp7.Diccionario, diccionario2: tp7.Diccionario):
+    resta = tp7.Diccionario()
+    for clave in diccionario1.keys():
+        if not clave in diccionario2:
+            resta.insert(clave,diccionario1[clave])
+    return resta  
 # Ejercicio 12
 # Escribir la operación obtenerHermano del TDA ABB que recibe un número N y retorna el número del nodo hermano del nodo que contiene al número N. Dos nodos se definen como hermanos cuando tienen el mismo padre. Si el número N no está en el árbol o no tienen nodo hermano, la operación debe retornar None.
 
@@ -294,7 +353,7 @@ class ABB(ABB):
       return hermano
 
 arbol1 = ABB((50,40,30,20,45,35,28,60,70,55,65,68,80))
-print(arbol1.obtenerHermano(65))
+# print(arbol1.obtenerHermano(65))
 
 # Escribir la función promedios que recibe una lista de materias (strings) y una lista de notas del mismo tamaño.
 # Retorna un diccionario que posee como clave cada materia y como significado la nota promedio de cada
@@ -323,4 +382,4 @@ def promedios(listaMaterias, listaNotas):
     dicTotalNotas[el] = dicTotalNotas[el] / dicCantNotas[el]
   return dicTotalNotas
 
-print(promedios(materias, notas))
+# print(promedios(materias, notas))
