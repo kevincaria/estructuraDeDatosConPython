@@ -160,10 +160,10 @@ class Lista(Lista):
         else:
           self.siguiente.sacarImpares()
 
-# lista1 = Lista((2,1,1,2,1,2,1,2,1,1))
-# print(lista1)
-# lista1.sacarImpares()
-# print(lista1)
+lista1 = Lista((2,1,1,2,1,2,1,2,1,1))
+print(lista1)
+lista1.sacarImpares()
+print(lista1)
 # primero -> 2 -> 1 -> 1 -> 2 -> 1 -> 2 -> 1 -> 2 -> 1 -> 1 -|
 # primero -> 2 -> 2 -> 2 -> 2 -|
 # Ejercicio 6
